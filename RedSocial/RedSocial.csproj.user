@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="Form0.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Form3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormAgregarAmigo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormBuscarPost.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormPostear.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormVerPost.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormVerPostAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
