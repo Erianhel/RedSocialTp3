@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RedSocial
 {
     public class RedSocial
     {
+        /*
         private List<Usuario> usuarios;
         public Usuario usuarioActual { get; set; }
         private List<Post> posts;
@@ -589,6 +591,8 @@ namespace RedSocial
 
             return borro;
         }
+
+        */
 
     }
 

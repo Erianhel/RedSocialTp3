@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace RedSocial
@@ -9,8 +10,12 @@ namespace RedSocial
 
 		public int id { get; set; }
 		public string palabra { get; set; }
-		public List<Post> posts { get; set; } = new List<Post>();
-		public int idPost { get; set; }
+
+		public ICollection<Post> Posts { get; } = new List<Post>();
+		public List<TagPost> TagPost { get; set; }
+
+		public Tag()
+		{ }
 
 		public Tag(int id, string palabra)
 		{

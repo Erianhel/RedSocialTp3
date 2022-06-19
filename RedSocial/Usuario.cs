@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RedSocial
 {
@@ -20,13 +21,19 @@ namespace RedSocial
         public bool esAdmin { get; set; }
 
 
-        public List<Usuario> amigos = new List<Usuario>();
 
         public List<Post> misPost = new List<Post>();
 
         public List<Comentario> misComentarios = new List<Comentario>();
 
         public List<Reaccion> misReacciones = new List<Reaccion>();
+
+        public virtual ICollection<UsuarioAmigo> misAmigos { get; set; }
+        public virtual ICollection<UsuarioAmigo> amigosMios { get; set; }
+
+
+        public Usuario()
+        {}
 
 
         public Usuario(int id, string dni, string nombre, string apellido, string mail, string pass, bool esAdmin, bool bloqueado, int intentosFallidos) 

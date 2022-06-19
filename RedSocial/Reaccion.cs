@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RedSocial
 {
@@ -15,6 +16,9 @@ namespace RedSocial
         public int idUsuario { get; set; }
         public int idPost { get; set; }
 
+
+        public Reaccion()
+        { }
 
         public Reaccion(int id, int tipo, int idPost, int idUsuario)
         {

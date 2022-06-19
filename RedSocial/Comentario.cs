@@ -1,4 +1,9 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RedSocial
 {
@@ -13,6 +18,10 @@ namespace RedSocial
 		public int idPost { get; set; }
 		public Post post { get; set; }
 		public Usuario usuario { get; set; }
+
+
+		public Comentario()
+		{}
 
 		public Comentario(int id, DateTime fecha, string contenido,  int idUsuario, int idPost)
 		{
