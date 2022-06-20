@@ -25,68 +25,98 @@ namespace RedSocial
         {
             //nombre de la tabla
             modelBuilder.Entity<Usuario>()
-                .ToTable("USUARIOS")
+                .ToTable("Usuarios")
                 .HasKey(u => u.id);
             //Agregamos las tablas nuevas
             modelBuilder.Entity<Post>()
-                .ToTable("POSTS")
+                .ToTable("Posts")
                 .HasKey(d => d.id);
             modelBuilder.Entity<Comentario>()
-                .ToTable("COMENTARIOS")
+                .ToTable("Comentarios")
                 .HasKey(p => p.id);
             modelBuilder.Entity<Tag>()
-                .ToTable("TAGS")
+                .ToTable("Tags")
                 .HasKey(d => d.id);
             modelBuilder.Entity<Reaccion>()
-                .ToTable("REACCIONES")
-                .HasKey(d => d.id);
+                .ToTable("Reacciones")
+                .HasKey(d => d.id);          
             modelBuilder.Entity<UsuarioAmigo>()
-                .ToTable("USUARIO_AMIGO")
+                .ToTable("Usuario_Amigo")
                 .HasKey(k => new { k.num_usr, k.num_usr2 });
             modelBuilder.Entity<TagPost>()
-                .ToTable("TAG_POST")
+                .ToTable("Tag_Post")
                 .HasKey(k => new { k.idTag, k.idPost });
 
 
             //==================== RELACIONES============================
             //DEFINICIÓN DE LA RELACIÓN USUARIO ONE TO MANY -> POST
+            modelBuilder.Entity<Usuario>()
+                .HasMany(U => U.misPost)
+                .WithOne(D => D.usuario)
+                .HasForeignKey(D => D.idUsuario)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Post>()
                 .HasOne(U => U.usuario)
                 .WithMany(D => D.misPost)
                 .HasForeignKey(D => D.idUsuario)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             //DEFINICIÓN DE LA RELACIÓN ONE TO MANY USUARIO -> COMENTARIO
+            modelBuilder.Entity<Usuario>()
+               .HasMany(U => U.misComentarios)
+               .WithOne(D => D.usuario)
+               .HasForeignKey(D => D.idUsuario)
+               .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Comentario>()
                 .HasOne(U => U.usuario)
                 .WithMany(D => D.misComentarios)
                 .HasForeignKey(D => D.idUsuario)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             //DEFINICIÓN DE LA RELACIÓN ONE TO MANY USUARIO -> REACCION
+            modelBuilder.Entity<Usuario>()
+               .HasMany(U => U.misReacciones)
+               .WithOne(D => D.usuario)
+               .HasForeignKey(D => D.idUsuario)
+               .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Reaccion>()
                 .HasOne(U => U.usuario)
                 .WithMany(D => D.misReacciones)
                 .HasForeignKey(D => D.idUsuario)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             //DEFINICIÓN DE LA RELACIÓN ONE TO MANY COMENTARIO -> POST
+            modelBuilder.Entity<Post>()
+                .HasMany(U => U.comentarios)
+                .WithOne(D => D.post)
+                .HasForeignKey(D => D.idPost)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Comentario>()
                 .HasOne(U => U.post)
                 .WithMany(D => D.comentarios)
                 .HasForeignKey(D => D.idPost)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             //DEFINICIÓN DE LA RELACIÓN ONE TO MANY REACCION -> POST
+            modelBuilder.Entity<Post>()
+                .HasMany(U => U.reacciones)
+                .WithOne(D => D.post)
+                .HasForeignKey(D => D.idPost)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Reaccion>()
                 .HasOne(U => U.post)
                 .WithMany(D => D.reacciones)
                 .HasForeignKey(D => D.idPost)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             //DEFINICIÓN DE LA RELACIÓN MANY TO MANY TAG <-> POST
             modelBuilder.Entity<Post>()
@@ -109,7 +139,7 @@ namespace RedSocial
                 .WithMany(U => U.amigosMios)
                 .HasForeignKey(u => u.num_usr2)
                 .OnDelete(DeleteBehavior.Restrict);
-           // modelBuilder.Entity<UsuarioAmigo>().HasKey(k => new { k.num_usr, k.num_usr2 });
+            modelBuilder.Entity<UsuarioAmigo>().HasKey(k => new { k.num_usr, k.num_usr2 });
 
             //propiedades de los datos
             modelBuilder.Entity<Usuario>(
@@ -143,7 +173,7 @@ namespace RedSocial
                usr =>
                {
                    usr.Property(u => u.contenido).HasColumnType("varchar(255)");
-                   usr.Property(u => u.fecha).HasColumnType("DateTime");
+                   usr.Property(u => u.fecha).HasColumnType("datetime");
                    usr.Property(u => u.idUsuario).HasColumnType("int");
                });
 
@@ -151,12 +181,12 @@ namespace RedSocial
                usr =>
                {
                    usr.Property(u => u.contenido).HasColumnType("varchar(255)");
-                   usr.Property(u => u.fecha).HasColumnType("DateTime");
+                   usr.Property(u => u.fecha).HasColumnType("datetime");
                    usr.Property(u => u.idUsuario).HasColumnType("int");
                    usr.Property(u => u.idPost).HasColumnType("int");
                });
 
-            modelBuilder.Entity<UsuarioAmigo>(
+           modelBuilder.Entity<UsuarioAmigo>(
               usr =>
               {
                   usr.Property(u => u.num_usr).HasColumnType("int");
@@ -169,15 +199,16 @@ namespace RedSocial
                   usr.Property(u => u.idTag).HasColumnType("int");
                   usr.Property(u => u.idPost).HasColumnType("int");
               });
+        
 
-            /*
+            
             //AGREGO ALGUNOS DATOS DE PRUEBA
             modelBuilder.Entity<Usuario>().HasData(
-                new { id = 1, dni = "11111111", nombre = "111", apellido = "111", mail = "111@111", pass = "111", bloqueado = false, esADM = true },
-                new { id = 2, dni = "22222222", nombre = "222", apellido = "222", mail = "222@222", pass = "222", bloqueado = false, esADM = false },
-                new { id = 3, dni = "33333333", nombre = "333", apellido = "333", mail = "333@333", pass = "333", bloqueado = false, esADM = false },
-                new { id = 4, dni = "44444444", nombre = "444", apellido = "444", mail = "444@444", pass = "444", bloqueado = false, esADM = false },
-                new { id = 5, dni = "55555555", nombre = "555", apellido = "555", mail = "555@555", pass = "555", bloqueado = true, esADM = false });
+                new { id = 1, dni = "11111111", nombre = "111", apellido = "111", mail = "111@111", pass = "111", intentosFallidos = 0, bloqueado = false, esADM = true },
+                new { id = 2, dni = "22222222", nombre = "222", apellido = "222", mail = "222@222", pass = "222", intentosFallidos = 0, bloqueado = false, esADM = false },
+                new { id = 3, dni = "33333333", nombre = "333", apellido = "333", mail = "333@333", pass = "333", intentosFallidos = 0, bloqueado = false, esADM = false },
+                new { id = 4, dni = "44444444", nombre = "444", apellido = "444", mail = "444@444", pass = "444", intentosFallidos = 0, bloqueado = false, esADM = false },
+                new { id = 5, dni = "55555555", nombre = "555", apellido = "555", mail = "555@555", pass = "555", intentosFallidos = 0, bloqueado = true, esADM = false });
             modelBuilder.Entity<Post>().HasData(
                 new { id = 1, contenido = "111", fecha = DateTime.Now, idUsuario = 1 },
                 new { id = 2, contenido = "222", fecha = DateTime.Now, idUsuario = 1 },
@@ -191,11 +222,11 @@ namespace RedSocial
                 new { id = 4, contenido = "444", fecha = DateTime.Now, idUsuario = 3, idPost = 3 },
                 new { id = 5, contenido = "555", fecha = DateTime.Now, idUsuario = 4, idPost = 4 });
             modelBuilder.Entity<Reaccion>().HasData(
-               new { id = 1, tipo = "1", idUsuario = 1, idPost = 1 },
-               new { id = 2, tipo = "1", idUsuario = 5, idPost = 1 },
-               new { id = 3, tipo = "1", idUsuario = 2, idPost = 2 },
-               new { id = 4, tipo = "1", idUsuario = 3, idPost = 3 },
-               new { id = 5, tipo = "1", idUsuario = 4, idPost = 4 });
+               new { id = 1, tipo = 1, idUsuario = 1, idPost = 1 },
+               new { id = 2, tipo = 1, idUsuario = 5, idPost = 1 },
+               new { id = 3, tipo = 1, idUsuario = 2, idPost = 2 },
+               new { id = 4, tipo = 1, idUsuario = 3, idPost = 3 },
+               new { id = 5, tipo = 1, idUsuario = 4, idPost = 4 });
             modelBuilder.Entity<Tag>().HasData(
                new { id = 1, palabra = "111" },
                new { id = 2, palabra = "222" },
@@ -215,7 +246,7 @@ namespace RedSocial
                new { num_usr = 4, num_usr2 = 3 },
                new { num_usr = 5, num_usr2 = 4 });
 
-            */
+          
 
             //Ignoro, no agrego UsuarioManager a la base de datos
             modelBuilder.Ignore<RedSocial>();

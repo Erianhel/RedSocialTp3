@@ -9,60 +9,66 @@ namespace RedSocial
 {
     public class RedSocial
     {
-        /*
-        private List<Usuario> usuarios;
+        private MyContext contexto;
         public Usuario usuarioActual { get; set; }
-        private List<Post> posts;
-        private List<Tag> tags;
-        private List<Comentario> comentarios;
-        private DAL DB;
+       
         public RedSocial()
-        {
-            usuarios = new List<Usuario>();
-            posts = new List<Post>();
-            tags = new List<Tag>();
-            comentarios = new List<Comentario>();
-            DB = new DAL();
+        { 
             inicializarAtributos();
         }
 
         private void inicializarAtributos()
         {
-            usuarios = DB.inicializarUsuarios();
-            posts = DB.inicializarPost(usuarios);
-            DB.inicializarReacciones(posts, usuarios);
-            comentarios = DB.inicializarComentarios(posts, usuarios);
-            tags = DB.inicializarTags();
-            DB.inicializarTagsPost(posts, tags);
+            try
+            {
+                contexto = new MyContext();
+                contexto.usuarios.Include(u => u.misPost).Include(u => u.misComentarios).Include(u => u.misReacciones).Include(u => u.misAmigos)
+                    .ThenInclude(ua => ua.user).Include(u => u.amigosMios).ThenInclude(ua => ua.amigo).Load();
+                
+                contexto.posts.Include(u => u.usuario).Include(u => u.comentarios).Include(u => u.reacciones).Include(u => u.Tags).Load();
+
+                contexto.comentarios.Include(u => u.usuario).Include(u => u.post).Load();
+
+                contexto.reacciones.Include(u => u.post).Include(u => u.usuario).Load();
+
+                contexto.Tags.Include(u => u.Posts).Load();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
-        public bool iniciarSesion(string user, string pass)
+        public bool iniciarSesion(string nombre, string pass)
         {
             bool usuarioEncontrado = false;
 
-            foreach (Usuario usuario in usuarios)
-            {
+            Usuario us1 = contexto.usuarios.Where(U => U.nombre.Equals(nombre)).FirstOrDefault();
                 
 
-                if (usuario.intentosFallidos == 3)
+                if (us1.intentosFallidos == 3)
                 {
-                    usuario.bloqueado = true;
-                    DB.modificarUsuario(usuario.id, usuario.dni, usuario.nombre, usuario.apellido, usuario.mail, usuario.pass, usuario.esAdmin, true, 3);
+                    us1.bloqueado = true;
+                    us1.intentosFallidos = 3;
+                    contexto.usuarios.Update(us1); 
+                    contexto.SaveChanges();
                 }
 
-                if (usuario.nombre.Equals(user) && usuario.pass.Equals(pass) && usuario.bloqueado != true)
-                {
-                    this.usuarioActual = usuario;
-                    usuarioEncontrado = true;
-                    this.usuarioActual.intentosFallidos = 0;
-                }
-                else if (usuario.nombre.Equals(user) && !usuario.pass.Equals(pass))
-                {
-                    usuario.intentosFallidos++;
-                    DB.modificarUsuario(usuario.id, usuario.dni, usuario.nombre, usuario.apellido, usuario.mail, usuario.pass, usuario.esAdmin, false, usuario.intentosFallidos);
-                }
-
+            if (us1.nombre.Equals(nombre) && us1.pass.Equals(pass) && us1.bloqueado != true)
+            {
+                this.usuarioActual = us1;
+                usuarioEncontrado = true;
+                us1.intentosFallidos = 0;
+                contexto.usuarios.Update(us1);
+                contexto.SaveChanges();
             }
+            else if (us1.nombre.Equals(nombre) && !us1.pass.Equals(pass))
+            {
+                us1.intentosFallidos++;
+                contexto.usuarios.Update(us1);
+                contexto.SaveChanges();
+                }
             return usuarioEncontrado;
         }
 
@@ -592,7 +598,7 @@ namespace RedSocial
             return borro;
         }
 
-        */
+        
 
     }
 
