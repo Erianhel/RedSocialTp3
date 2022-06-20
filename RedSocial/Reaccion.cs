@@ -27,30 +27,13 @@ namespace RedSocial
             this.idPost = idPost;
             this.idUsuario = idUsuario;
         }
-
-        public void codigo()
+        public Reaccion(int tipo, int idPost, int idUsuario)
         {
-            int p1 = 0;
-            int correcto = 0;
-            string respuesta = "";
-            //pregunto si 2+2=4??
-
-            if (p1 == 0)
-            {
-                respuesta = "8";
-                if (respuesta == "8")
-                {
-                    correcto++;
-                }
-                p1 = 1;
-            }
-            else
-            {
-                //ACA YA PASASTE
-            }
-
+            this.id = id;
+            this.tipo = tipo;
+            this.idPost = idPost;
+            this.idUsuario = idUsuario;
         }
-
 
     }
 }

@@ -81,45 +81,29 @@ namespace RedSocial
         //======================================MANEJO DE USUARIOS=========================================
         public List<Usuario> getUsuarios()
         {
+            List<Usuario> usuarios = contexto.usuarios.ToList<Usuario>();
             return usuarios;
         }
 
         public Usuario getUsuario(int idUsur)
         {
-            foreach(Usuario usuario in usuarios)
-            {
-                if(usuario.id == idUsur) return usuario;
-            }
-            return null;
+            return contexto.usuarios.Where(U => U.id.Equals(idUsur)).FirstOrDefault();
         }
 
         public bool registrarUsuario(string Dni, string Nombre, string Apellido, string Mail, string Password, bool admin)
         {
             //comprobación para que no me agreguen usuarios con DNI duplicado
             bool esValido = true;
-            foreach (Usuario u in usuarios)
-            {
-                if (u.dni.Equals(Dni))
-                {
-                    esValido = false;
-                }
-            }
-            if (esValido)
+            Usuario usuario = null;
+            usuario = contexto.usuarios.Where(U => U.nombre.Equals(Dni)).FirstOrDefault();
+            
+            if (usuario != null)
             {
                 int idNuevoUsuario;
-                idNuevoUsuario = DB.registrarUsuario(Dni, Nombre, Apellido, Mail, Password, admin, false, 0);
-                if (idNuevoUsuario != -1)
-                {
-                    //Ahora sí lo agrego en la lista
-                    Usuario nuevo = new Usuario(idNuevoUsuario, Dni, Nombre, Apellido, Mail, Password, admin, false, 0);
-                    usuarios.Add(nuevo);
+
+                    Usuario nuevo = new Usuario(Dni, Nombre, Apellido, Mail, Password, admin, false, 0);
+                    contexto.usuarios.Add(nuevo);
                     return true;
-                }
-                else
-                {
-                    //algo salió mal con la query porque no generó un id válido
-                    return false;
-                }
             }
             else
                 return false;

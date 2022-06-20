@@ -49,5 +49,17 @@ namespace RedSocial
             this.intentosFallidos = intentosFallidos;
 
         }
+        public Usuario(string dni, string nombre, string apellido, string mail, string pass, bool esAdmin, bool bloqueado, int intentosFallidos) 
+        {
+            this.dni = dni;
+            this.nombre = nombre;
+            this.apellido = apellido;
+            this.mail = mail;
+            this.pass = pass;
+            this.esAdmin = esAdmin;
+            this.bloqueado = bloqueado;
+            this.intentosFallidos = intentosFallidos;
+
+        }
     }
 }

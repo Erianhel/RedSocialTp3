@@ -33,6 +33,15 @@ namespace RedSocial
             this.idUsuario = idUsuario;
 
         }
+        public Post(DateTime fecha, string contenido, int idUsuario)
+        {
+            this.contenido = contenido;
+            this.comentarios = new List<Comentario>(); 
+            this.reacciones = new List<Reaccion>();
+            this.fecha = fecha;
+            this.idUsuario = idUsuario;
+
+        }
     }
     
 }
