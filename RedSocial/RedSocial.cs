@@ -241,6 +241,7 @@ namespace RedSocial
                 if (amigo !=null)
                 {
                     usuarioActual.misAmigos.Remove(amigo);
+                    contexto.SaveChanges();
                 }
             }
             return;
@@ -269,33 +270,55 @@ namespace RedSocial
         //===========================================MANEJO DE REACCIONES==================================================
         public bool reaccionar(int idPost, int tipoReaccion, int idUsuario)
         {
-            Post PostAModif = null;
-            foreach (Post p in posts)
+            Post post = null;
+            post = contexto.posts.Where(U => U.id.Equals(idPost)).FirstOrDefault();
+
+            if(post != null)
             {
-                if (p.id == idPost)
+                Reaccion reaccion = post.reacciones.Where(U => U.idUsuario.Equals(idUsuario)).FirstOrDefault();
+                if (reaccion != null) return false;
+
+                try
                 {
-                    PostAModif = p;
-                }
-            }
-            if (PostAModif != null)
-            {
-                foreach (Reaccion r in PostAModif.reacciones)
+                    Reaccion r = new Reaccion(tipoReaccion,idPost,usuarioActual.id);
+                    post.reacciones.Add(r);
+                    contexto.posts.Update(post);
+                    contexto.SaveChanges();
+                    return true;
+                }catch(Exception ex)
                 {
-                    if (r.usuario.id == idUsuario)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
-            }
-            int idNuevaReaccion = DB.Reaccionar(tipoReaccion, idPost, idUsuario);
-            if (idNuevaReaccion != -1)
-            {
-                Reaccion Nueva = new Reaccion(idNuevaReaccion, tipoReaccion, PostAModif.id, idUsuario);
-                PostAModif.reacciones.Add(Nueva);
-                usuarioActual.misReacciones.Add(Nueva);
-                return true;
             }
             return false;
+
+            //Post PostAModif = null;
+            //foreach (Post p in posts)
+            //{
+            //    if (p.id == idPost)
+            //    {
+            //        PostAModif = p;
+            //    }
+            //}
+            //if (PostAModif != null)
+            //{
+            //    foreach (Reaccion r in PostAModif.reacciones)
+            //    {
+            //        if (r.usuario.id == idUsuario) aca no compara con el usuario actual??
+            //        {
+            //            return false;
+            //        }
+            //    }
+            //}
+            //int idNuevaReaccion = DB.Reaccionar(tipoReaccion, idPost, idUsuario);
+            //if (idNuevaReaccion != -1)
+            //{
+            //    Reaccion Nueva = new Reaccion(idNuevaReaccion, tipoReaccion, PostAModif.id, idUsuario);
+            //    PostAModif.reacciones.Add(Nueva);
+            //    usuarioActual.misReacciones.Add(Nueva);
+            //    return true;
+            //}
+            //return false;
         }
 
 
