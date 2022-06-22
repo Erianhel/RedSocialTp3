@@ -413,99 +413,157 @@ namespace RedSocial
         //===========================================MANEJO DE POSTEOS==================================================
         public void postear(string contenido, DateTime fecha, int idUsuario, List<Tag> tag)
         {
-            int idNuevoPost;
-            idNuevoPost = DB.Postear(contenido, fecha, idUsuario);
-
-            if (idNuevoPost != -1)
+            try
             {
-                //Ahora sí lo agrego en la lista
-                Post nuevo = new Post(idNuevoPost,
-                                            fecha,
-                                            contenido,
-                                            idUsuario);
-                nuevo.usuario = usuarioActual;
-                foreach (Tag t in tag)
-                {
-                    t.id = DB.altaTag(t.palabra,idNuevoPost);
-                    DB.altaRelacionarTagPost(idNuevoPost,t.id);
-
-                    t.posts.Add(nuevo);
-                    nuevo.tags.Add(t);
-
-                    if (!tags.Contains(t))
-                    {
-                        tags.Add(t);
-                    }
-                }
-             
-                posts.Add(nuevo);
+                Post nuevo = new Post(fecha,contenido,idUsuario);
+                contexto.posts.Add(nuevo);
                 usuarioActual.misPost.Add(nuevo);
+                contexto.SaveChanges();
+            }
+            catch(Exception ex)
+            {
 
             }
+            //int idNuevoPost;
+            //idNuevoPost = DB.Postear(contenido, fecha, idUsuario);
+
+            //if (idNuevoPost != -1)
+            //{
+            //    //Ahora sí lo agrego en la lista
+            //    Post nuevo = new Post(idNuevoPost,
+            //                                fecha,
+            //                                contenido,
+            //                                idUsuario);
+            //    nuevo.usuario = usuarioActual;
+            //    foreach (Tag t in tag)
+            //    {
+            //        t.id = DB.altaTag(t.palabra,idNuevoPost);
+            //        DB.altaRelacionarTagPost(idNuevoPost,t.id);
+
+            //        t.posts.Add(nuevo);
+            //        nuevo.tags.Add(t);
+
+            //        if (!tags.Contains(t))
+            //        {
+            //            tags.Add(t);
+            //        }
+            //    }
+             
+            //    posts.Add(nuevo);
+            //    usuarioActual.misPost.Add(nuevo);
+
+            //}
 
         }
 
         public bool modificarPost(int idPost, string comentario)
         {
-            int aux = posts.FindIndex(p => p.id == idPost);
-            Post post = posts[aux];
+            Post post = null;
+            post = contexto.posts.Where(U => U.id==idPost).FirstOrDefault();
 
-            if (!post.usuario.Equals(usuarioActual)) return false;
+            if(post==null) return false;
 
-            if (DB.modificarPost(idPost, comentario))
+            try
             {
                 post.contenido = comentario;
+                contexto.posts.Update(post);
+                contexto.SaveChanges();
                 return true;
+            }catch(Exception ex)
+            {
+                return false;
             }
             return false;
+            //int aux = posts.FindIndex(p => p.id == idPost);
+            //Post post = posts[aux];
+
+            //if (!post.usuario.Equals(usuarioActual)) return false;
+
+            //if (DB.modificarPost(idPost, comentario))
+            //{
+            //    post.contenido = comentario;
+            //    return true;
+            //}
+            //return false;
         }
 
         public bool eliminarPost(int idPost)
-
         {
+            Post post = null;
+            Usuario aux = null;
+            post = contexto.posts.Where(U => U.id == idPost).FirstOrDefault();
+            aux = contexto.usuarios.Where(U => U.id == post.idUsuario).FirstOrDefault();            
+            if(post == null) return false;
+            if(!usuarioActual.misPost.Contains(post) && !usuarioActual.esAdmin) return false;
+
+            //elimino las reacciones
+            var queryReaccion = from Reaccion in contexto.reacciones
+                        where Reaccion.idPost == idPost
+                        select Reaccion;
+
+            foreach(Reaccion r in queryReaccion)
+            {
+                contexto.reacciones.Remove(r);
+            }
             
-            //Busco el post a eliminar
-            int auxPost = posts.FindIndex(p => p.id == idPost);
+            //elimino los comentarios
+            var queryComentario = from Comentario in contexto.comentarios
+                                where Comentario.idPost == idPost
+                                select Comentario;
 
-            //busco al usuario en la lista de usuarios
-            int aux = usuarios.FindIndex(usuario => usuario.id == posts[auxPost].idUsuario);
-            if (!usuarioActual.misPost.Contains(posts[auxPost]) && !usuarioActual.esAdmin) return false;
-                //busco la reaccion correspondiente al post 
-                Reaccion reaccionEliminar;
-            if (posts[auxPost].reacciones != null || posts[auxPost].reacciones.Count >0)
+            foreach (Comentario c in queryComentario)
             {
-                //elimino la reaccion correspondiente al post
-                reaccionEliminar = usuarios[aux].misReacciones.Find(x => x.post.Equals(posts[auxPost]));
-                usuarios[aux].misReacciones.Remove(reaccionEliminar);
-                if(reaccionEliminar != null) DB.eliminarReaccion(reaccionEliminar.id);
+                contexto.comentarios.Remove(c);
             }
 
-            if (posts[auxPost].comentarios != null)
-            {
-                foreach (Comentario c in posts[auxPost].comentarios)
-                {
-                    // Se elimina el comentario del post
-                    usuarios[aux].misComentarios.Remove(c);
-                    DB.eliminarComentario(c.id);
-                }
-
-            }
-            if (posts[auxPost].tags != null && posts[auxPost].tags.Count > 0)
-            {
-                foreach(Tag tag in posts[auxPost].tags)
-                {
-                    tags.Remove(tag);
-                    DB.bajaRelacionTag_post(idPost, tag.id);
-                    DB.bajaTag(tag.id);
-                }
-                
-            }
-                
-            DB.eliminarPost(idPost);
-            usuarios[aux].misPost.Remove(posts[auxPost]); // borro el post de la lista de posts del usuario
-            posts.RemoveAt(auxPost); //borro el post de la lista de posts
+            contexto.posts.Remove(post);
+            aux.misPost.Remove(post);
+            contexto.usuarios.Update(aux);
+            contexto.SaveChanges();
 
             return true;
+            ////Busco el post a eliminar
+            //int auxPost = posts.FindIndex(p => p.id == idPost);
+
+            ////busco al usuario en la lista de usuarios
+            //int aux = usuarios.FindIndex(usuario => usuario.id == posts[auxPost].idUsuario);
+            //if (!usuarioActual.misPost.Contains(posts[auxPost]) && !usuarioActual.esAdmin) return false;
+            //    //busco la reaccion correspondiente al post 
+            //    Reaccion reaccionEliminar;
+            //if (posts[auxPost].reacciones != null || posts[auxPost].reacciones.Count >0)
+            //{
+            //    //elimino la reaccion correspondiente al post
+            //    reaccionEliminar = usuarios[aux].misReacciones.Find(x => x.post.Equals(posts[auxPost]));
+            //    usuarios[aux].misReacciones.Remove(reaccionEliminar);
+            //    if(reaccionEliminar != null) DB.eliminarReaccion(reaccionEliminar.id);
+            //}
+
+            //if (posts[auxPost].comentarios != null)
+            //{
+            //    foreach (Comentario c in posts[auxPost].comentarios)
+            //    {
+            //        // Se elimina el comentario del post
+            //        usuarios[aux].misComentarios.Remove(c);
+            //        DB.eliminarComentario(c.id);
+            //    }
+
+            //}
+            //if (posts[auxPost].tags != null && posts[auxPost].tags.Count > 0)
+            //{
+            //    foreach(Tag tag in posts[auxPost].tags)
+            //    {
+            //        tags.Remove(tag);
+            //        DB.bajaRelacionTag_post(idPost, tag.id);
+            //        DB.bajaTag(tag.id);
+            //    }
+                
+            //}
+                
+            //DB.eliminarPost(idPost);
+            //usuarios[aux].misPost.Remove(posts[auxPost]); // borro el post de la lista de posts del usuario
+            //posts.RemoveAt(auxPost); //borro el post de la lista de posts
+
+            //return true;
         }
 
         //===========================================MOSTRAR DATOS==================================================
@@ -518,11 +576,11 @@ namespace RedSocial
         //Mostar posts
         public List<Post> mostrarPost()
         {
-            return posts;
+            return contexto.posts.ToList();
         }
         public List<Tag> mostrarTag()
         {
-            return tags;
+            return contexto.Tags.ToList();
         }
 
         //Mostrar posts amigo
