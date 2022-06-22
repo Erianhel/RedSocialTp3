@@ -97,13 +97,21 @@ namespace RedSocial
             Usuario usuario = null;
             usuario = contexto.usuarios.Where(U => U.nombre.Equals(Dni)).FirstOrDefault();
             
-            if (usuario != null)
+            if (usuario == null)
             {
-                int idNuevoUsuario;
-
+                try
+                {
+                    //Ahora sí lo agrego en la lista
                     Usuario nuevo = new Usuario(Dni, Nombre, Apellido, Mail, Password, admin, false, 0);
                     contexto.usuarios.Add(nuevo);
+                    contexto.SaveChanges();
                     return true;
+                }
+                catch(Exception e)
+                {
+                    //algo salió mal con la query porque no generó un id válido
+                    return false;
+                }
             }
             else
                 return false;
@@ -111,15 +119,20 @@ namespace RedSocial
 
         public bool eliminarUsuario(int Id)
         {
-            //primero me aseguro que lo pueda agregar a la base
-            if (DB.eliminarUsuario(Id) == 1)
+            Usuario usuario = null;
+            usuario = contexto.usuarios.Where(U => U.nombre.Equals(Id)).FirstOrDefault();
+            if (usuario != null)
             {
                 try
                 {
                     //Ahora sí lo elimino en la lista
+                    /*
                     for (int i = 0; i < usuarios.Count; i++)
                         if (usuarios[i].id == Id)
                             usuarios.RemoveAt(i);
+                    */
+                    contexto.usuarios.Remove(usuario);
+                    contexto.SaveChanges();
                     return true;
                 }
                 catch (Exception)
@@ -136,32 +149,31 @@ namespace RedSocial
 
         public bool modificarUsuario(int Id, string Dni, string Nombre, string Apellido, string Mail, string Password, bool EsADM, bool Bloqueado, int IntentosFallidos)
         {
+            Usuario usuario = null;
+            usuario = contexto.usuarios.Where(U => U.nombre.Equals(Id)).FirstOrDefault();
+
             if (Bloqueado == false)
             {
                 IntentosFallidos = 0;
             }
 
             //primero me aseguro que lo pueda agregar a la base
-            if (DB.modificarUsuario(Id, Dni, Nombre, Apellido, Mail, Password, EsADM, Bloqueado,IntentosFallidos) == 1)
+            if (usuario != null)
             {
                 try
                 {
                     //Ahora sí lo MODIFICO en la lista
-                    for (int i = 0; i < usuarios.Count; i++)
-                    {
-                        
-                        if (usuarios[i].id == Id)
-                        {
-                            usuarios[i].nombre = Nombre;
-                            usuarios[i].apellido = Apellido;
-                            usuarios[i].dni = Dni;
-                            usuarios[i].mail = Mail;
-                            usuarios[i].pass = Password;
-                            usuarios[i].esAdmin = EsADM;
-                            usuarios[i].bloqueado = Bloqueado;
-                            usuarios[i].intentosFallidos = IntentosFallidos;
-                        }
-                    }
+
+                    usuario.nombre = Nombre;
+                    usuario.apellido = Apellido;
+                    usuario.dni = Dni;
+                    usuario.mail = Mail;
+                    usuario.pass = Password;
+                    usuario.esAdmin = EsADM;
+                    usuario.bloqueado = Bloqueado;
+                    usuario.intentosFallidos = IntentosFallidos;
+                    contexto.usuarios.Update(usuario);
+                    contexto.SaveChanges();
                     return true;
                 }
                 catch (Exception)
@@ -180,21 +192,41 @@ namespace RedSocial
 
         public bool agregarAmigo(int id)
         {
-            if (DB.registrarAmigo(usuarioActual.id, id))
+            Usuario usuario = null;
+            usuario = contexto.usuarios.Where(U => U.nombre.Equals(id)).FirstOrDefault();
+
+            if (usuario != null && usuarioActual.misAmigos.Where(U => U.amigo.Equals(usuario)).FirstOrDefault() != null)
             {
-                foreach (Usuario u in usuarios)
+                try
                 {
+                    UsuarioAmigo amigo = new UsuarioAmigo(usuarioActual,usuario);
+                    usuarioActual.amigosMios.Add(amigo);
+                    contexto.Update(usuarioActual);
+                    contexto.SaveChanges();
 
-                    if (!usuarioActual.amigos.Contains(u) && (u.id == id))
-                    {
-                        u.amigos.Add(usuarioActual);
-                        usuarioActual.amigos.Add(u);
-                        return true;
-                    }
-
+                }
+                catch (Exception e)
+                {
+                    return false;
                 }
             }
             return false;
+
+            //if (DB.registrarAmigo(usuarioActual.id, id))
+            //{
+            //    foreach (Usuario u in usuarios)
+            //    {
+
+            //        if (!usuarioActual.amigos.Contains(u) && (u.id == id))
+            //        {
+            //            u.amigos.Add(usuarioActual);
+            //            usuarioActual.amigos.Add(u);
+            //            return true;
+            //        }
+
+            //    }
+            //}
+            //return false;
         }
 
         public void quitarAmigo(int id)
