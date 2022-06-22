@@ -586,15 +586,25 @@ namespace RedSocial
         //Mostrar posts amigo
         public List<Post> mostrarPostAmigo()
         {
-            List<Post> postAmigo = new List<Post>();
-            foreach (Usuario amigo in usuarioActual.amigos)
+            List<Post> postList = new List<Post>();
+            foreach (UsuarioAmigo amigo in usuarioActual.misAmigos)
             {
-                foreach (Post post in amigo.misPost)
+                foreach (Post post in amigo.amigo.misPost)
                 {
-                    postAmigo.Add(post);
+                    postList.Add(post);
                 }
             }
-            return postAmigo;
+            return postList.ToList();
+
+            //List<Post> postAmigo = new List<Post>();
+            //foreach (Usuario amigo in usuarioActual.amigos)
+            //{
+            //    foreach (Post post in amigo.misPost)
+            //    {
+            //        postAmigo.Add(post);
+            //    }
+            //}
+            //return postAmigo;
         }
 
         //Buscar posts
