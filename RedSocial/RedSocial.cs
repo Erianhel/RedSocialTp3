@@ -324,58 +324,89 @@ namespace RedSocial
 
         public void modificarReaccion(int idReaccion, int tipo, int idPost)
         {
+            Reaccion reaccion = null;
+            reaccion = contexto.reacciones.Where(U => U.id.Equals(idReaccion)).FirstOrDefault();
 
-            if (DB.modificarReaccion(idReaccion, tipo))
+            if (reaccion == null) return;
+
+            Post post = contexto.posts.Where(U => U.id == idPost).FirstOrDefault();
+            try
             {
-                foreach (Post p in posts)
-                {
-                    if (p.id == idPost)
-                    {
-                        //busco el indice de la reaccion en la lista de posts
-                        int aux = p.reacciones.FindIndex((reaccion) => reaccion.id == idReaccion);
-                        p.reacciones[aux].tipo = tipo;
-                    }
-                }
-
+                post.reacciones.Remove(reaccion);
+                contexto.SaveChanges();
+            }catch(Exception ex)
+            {
+                return;
             }
+            //if (DB.modificarReaccion(idReaccion, tipo))
+            //{
+            //    foreach (Post p in posts)
+            //    {
+            //        if (p.id == idPost)
+            //        {
+            //            //busco el indice de la reaccion en la lista de posts
+            //            int aux = p.reacciones.FindIndex((reaccion) => reaccion.id == idReaccion);
+            //            p.reacciones[aux].tipo = tipo;
+            //        }
+            //    }
+
+            //}
 
         }
 
         public void quitarReaccion(int idPost)
         {
-            int idReaccion = 0;
-            foreach (Post p in posts) {
-                bool salir = false;
-                if(p.id == idPost)
-                {
-                    foreach(Reaccion r in p.reacciones)
-                    {
+            Post post = null;
+            post = contexto.posts.Where(U => U.id==idPost).FirstOrDefault();
 
-                        if(r.usuario.id == usuarioActual.id)
-                        {
-                            idReaccion = r.id;
-                            salir = true;
-                            break;
-                        }
-                    }
-                    if (salir) break;
-                    return;
-                }
-            }
-            if (DB.eliminarReaccion(idReaccion))
+            if(post == null) return;
+
+            try
             {
-                //Borro reaccion de la lista
-                foreach (Post p in posts)
-                {
-                    if (p.id == idPost)
-                    {
-                        //busco el indice de la reaccion en la lista de posts
-                        int aux = p.reacciones.FindIndex((reaccion) => reaccion.id == idReaccion);
-                        p.reacciones.RemoveAt(aux);
-                        usuarioActual.misReacciones.RemoveAt(aux);
-                    }
-                }
+                Reaccion reaccion = post.reacciones.Where(U => U.idUsuario == usuarioActual.id).FirstOrDefault();
+                
+                post.reacciones.Remove(reaccion);
+                usuarioActual.misReacciones.Remove(reaccion);
+                contexto.reacciones.Remove(reaccion);
+                contexto.SaveChanges();
+            }catch (Exception ex)
+            {
+                return;
             }
+
+            //int idReaccion = 0;
+            //foreach (Post p in posts) {
+            //    bool salir = false;
+            //    if(p.id == idPost)
+            //    {
+            //        foreach(Reaccion r in p.reacciones)
+            //        {
+
+            //            if(r.usuario.id == usuarioActual.id)
+            //            {
+            //                idReaccion = r.id;
+            //                salir = true;
+            //                break;
+            //            }
+            //        }
+            //        if (salir) break;
+            //        return;
+            //    }
+            //}
+            //if (DB.eliminarReaccion(idReaccion))
+            //{
+            //    //Borro reaccion de la lista
+            //    foreach (Post p in posts)
+            //    {
+            //        if (p.id == idPost)
+            //        {
+            //            //busco el indice de la reaccion en la lista de posts
+            //            int aux = p.reacciones.FindIndex((reaccion) => reaccion.id == idReaccion);
+            //            p.reacciones.RemoveAt(aux);
+            //            usuarioActual.misReacciones.RemoveAt(aux);
+            //        }
+            //    }
+            //}
 
         }
 
