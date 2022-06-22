@@ -231,25 +231,38 @@ namespace RedSocial
 
         public void quitarAmigo(int id)
         {
-
-            if (DB.eliminarAmigo(id, usuarioActual.id))
+            Usuario usuario = null;
+            usuario = contexto.usuarios.Where(U => U.nombre.Equals(id)).FirstOrDefault();
+            
+            if(usuario != null)
             {
-                foreach (Usuario u in usuarios)
+                UsuarioAmigo amigo = usuarioActual.misAmigos.Where(U => U.amigo.Equals(usuario)).FirstOrDefault();
+
+                if (amigo !=null)
                 {
-
-                    if (u.id == id)
-                    {
-                        //Se elimina el amigo
-                        int aux = usuarios.FindIndex(usuario => usuario.id == usuarioActual.id);
-                        usuarios[aux].amigos.Remove(u);
-
-                        //El usuario que fue eliminado, tambien elimina al usuario que lo elimino
-                        int aux2 = usuarios.FindIndex(usuario => usuario.id == u.id);
-                        usuarios[aux2].amigos.Remove(usuarioActual);
-
-                    }
+                    usuarioActual.misAmigos.Remove(amigo);
                 }
             }
+            return;
+
+            //if (DB.eliminarAmigo(id, usuarioActual.id))
+            //{
+            //    foreach (Usuario u in usuarios)
+            //    {
+
+            //        if (u.id == id)
+            //        {
+            //            //Se elimina el amigo
+            //            int aux = usuarios.FindIndex(usuario => usuario.id == usuarioActual.id);
+            //            usuarios[aux].amigos.Remove(u);
+
+            //            //El usuario que fue eliminado, tambien elimina al usuario que lo elimino
+            //            int aux2 = usuarios.FindIndex(usuario => usuario.id == u.id);
+            //            usuarios[aux2].amigos.Remove(usuarioActual);
+
+            //        }
+            //    }
+            //}
 
         }
 
