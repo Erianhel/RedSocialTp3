@@ -120,7 +120,7 @@ namespace RedSocial
         public bool eliminarUsuario(int Id)
         {
             Usuario usuario = null;
-            usuario = contexto.usuarios.Where(U => U.nombre.Equals(Id)).FirstOrDefault();
+            usuario = contexto.usuarios.Where(U => U.id == Id).FirstOrDefault();
             if (usuario != null)
             {
                 try

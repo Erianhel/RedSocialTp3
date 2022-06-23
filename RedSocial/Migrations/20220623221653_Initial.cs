@@ -60,7 +60,7 @@ namespace RedSocial.Migrations
                         column: x => x.idUsuario,
                         principalTable: "Usuarios",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,7 +112,7 @@ namespace RedSocial.Migrations
                         column: x => x.idUsuario,
                         principalTable: "Usuarios",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,7 +139,7 @@ namespace RedSocial.Migrations
                         column: x => x.idUsuario,
                         principalTable: "Usuarios",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,7 +187,7 @@ namespace RedSocial.Migrations
                     { 2, "222", false, "22222222", false, 0, "222@222", "222", "222" },
                     { 3, "333", false, "33333333", false, 0, "333@333", "333", "333" },
                     { 4, "444", false, "44444444", false, 0, "444@444", "444", "444" },
-                    { 5, "555", true, "55555555", false, 0, "555@555", "555", "555" }
+                    { 5, "555", true, "55555555", false, 3, "555@555", "555", "555" }
                 });
 
             migrationBuilder.InsertData(
@@ -195,11 +195,11 @@ namespace RedSocial.Migrations
                 columns: new[] { "id", "contenido", "fecha", "idUsuario" },
                 values: new object[,]
                 {
-                    { 1, "111", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4045), 1 },
-                    { 2, "222", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4056), 1 },
-                    { 3, "333", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4056), 2 },
-                    { 4, "444", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4057), 3 },
-                    { 5, "555", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4058), 4 }
+                    { 1, "111", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5692), 1 },
+                    { 2, "222", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5700), 1 },
+                    { 3, "333", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5700), 2 },
+                    { 4, "444", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5701), 3 },
+                    { 5, "555", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5701), 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -210,7 +210,10 @@ namespace RedSocial.Migrations
                     { 1, 2 },
                     { 1, 3 },
                     { 2, 4 },
+                    { 3, 4 },
+                    { 4, 2 },
                     { 4, 3 },
+                    { 4, 5 },
                     { 5, 4 }
                 });
 
@@ -219,11 +222,11 @@ namespace RedSocial.Migrations
                 columns: new[] { "id", "contenido", "fecha", "idPost", "idUsuario" },
                 values: new object[,]
                 {
-                    { 1, "111", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4067), 1, 1 },
-                    { 2, "222", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4068), 1, 5 },
-                    { 3, "333", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4069), 2, 2 },
-                    { 4, "444", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4069), 3, 3 },
-                    { 5, "555", new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4070), 4, 4 }
+                    { 1, "111", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5743), 1, 1 },
+                    { 2, "222", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5745), 1, 5 },
+                    { 3, "333", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5745), 2, 2 },
+                    { 4, "444", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5746), 3, 3 },
+                    { 5, "555", new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5746), 4, 4 }
                 });
 
             migrationBuilder.InsertData(

@@ -56,11 +56,11 @@ namespace RedSocial
                 .HasForeignKey(D => D.idUsuario)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Post>()
+            /*modelBuilder.Entity<Post>()
                 .HasOne(U => U.usuario)
                 .WithMany(D => D.misPost)
                 .HasForeignKey(D => D.idUsuario)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);*/
 
 
             //DEFINICIÓN DE LA RELACIÓN ONE TO MANY USUARIO -> COMENTARIO
@@ -70,11 +70,11 @@ namespace RedSocial
                .HasForeignKey(D => D.idUsuario)
                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Comentario>()
+            /*modelBuilder.Entity<Comentario>()
                 .HasOne(U => U.usuario)
                 .WithMany(D => D.misComentarios)
                 .HasForeignKey(D => D.idUsuario)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);*/
 
 
             //DEFINICIÓN DE LA RELACIÓN ONE TO MANY USUARIO -> REACCION
@@ -84,11 +84,11 @@ namespace RedSocial
                .HasForeignKey(D => D.idUsuario)
                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Reaccion>()
+            /*modelBuilder.Entity<Reaccion>()
                 .HasOne(U => U.usuario)
                 .WithMany(D => D.misReacciones)
                 .HasForeignKey(D => D.idUsuario)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);*/
 
 
             //DEFINICIÓN DE LA RELACIÓN ONE TO MANY COMENTARIO -> POST
@@ -112,7 +112,7 @@ namespace RedSocial
                 .HasForeignKey(D => D.idPost)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Reaccion>()
+           modelBuilder.Entity<Reaccion>()
                 .HasOne(U => U.post)
                 .WithMany(D => D.reacciones)
                 .HasForeignKey(D => D.idPost)

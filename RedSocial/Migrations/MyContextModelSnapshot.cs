@@ -56,7 +56,7 @@ namespace RedSocial.Migrations
                         {
                             id = 1,
                             contenido = "111",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4067),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5743),
                             idPost = 1,
                             idUsuario = 1
                         },
@@ -64,7 +64,7 @@ namespace RedSocial.Migrations
                         {
                             id = 2,
                             contenido = "222",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4068),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5745),
                             idPost = 1,
                             idUsuario = 5
                         },
@@ -72,7 +72,7 @@ namespace RedSocial.Migrations
                         {
                             id = 3,
                             contenido = "333",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4069),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5745),
                             idPost = 2,
                             idUsuario = 2
                         },
@@ -80,7 +80,7 @@ namespace RedSocial.Migrations
                         {
                             id = 4,
                             contenido = "444",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4069),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5746),
                             idPost = 3,
                             idUsuario = 3
                         },
@@ -88,7 +88,7 @@ namespace RedSocial.Migrations
                         {
                             id = 5,
                             contenido = "555",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4070),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5746),
                             idPost = 4,
                             idUsuario = 4
                         });
@@ -123,35 +123,35 @@ namespace RedSocial.Migrations
                         {
                             id = 1,
                             contenido = "111",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4045),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5692),
                             idUsuario = 1
                         },
                         new
                         {
                             id = 2,
                             contenido = "222",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4056),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5700),
                             idUsuario = 1
                         },
                         new
                         {
                             id = 3,
                             contenido = "333",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4056),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5700),
                             idUsuario = 2
                         },
                         new
                         {
                             id = 4,
                             contenido = "444",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4057),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5701),
                             idUsuario = 3
                         },
                         new
                         {
                             id = 5,
                             contenido = "555",
-                            fecha = new DateTime(2022, 6, 23, 16, 54, 25, 108, DateTimeKind.Local).AddTicks(4058),
+                            fecha = new DateTime(2022, 6, 23, 19, 16, 53, 534, DateTimeKind.Local).AddTicks(5701),
                             idUsuario = 4
                         });
                 });
@@ -402,7 +402,7 @@ namespace RedSocial.Migrations
                             bloqueado = true,
                             dni = "55555555",
                             esAdmin = false,
-                            intentosFallidos = 0,
+                            intentosFallidos = 3,
                             mail = "555@555",
                             nombre = "555",
                             pass = "555"
@@ -442,7 +442,22 @@ namespace RedSocial.Migrations
                         new
                         {
                             num_usr = 4,
+                            num_usr2 = 2
+                        },
+                        new
+                        {
+                            num_usr = 4,
                             num_usr2 = 3
+                        },
+                        new
+                        {
+                            num_usr = 4,
+                            num_usr2 = 5
+                        },
+                        new
+                        {
+                            num_usr = 3,
+                            num_usr2 = 4
                         },
                         new
                         {
@@ -462,7 +477,7 @@ namespace RedSocial.Migrations
                     b.HasOne("RedSocial.Usuario", "usuario")
                         .WithMany("misComentarios")
                         .HasForeignKey("idUsuario")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("post");
@@ -475,7 +490,7 @@ namespace RedSocial.Migrations
                     b.HasOne("RedSocial.Usuario", "usuario")
                         .WithMany("misPost")
                         .HasForeignKey("idUsuario")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("usuario");
@@ -492,7 +507,7 @@ namespace RedSocial.Migrations
                     b.HasOne("RedSocial.Usuario", "usuario")
                         .WithMany("misReacciones")
                         .HasForeignKey("idUsuario")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("post");
