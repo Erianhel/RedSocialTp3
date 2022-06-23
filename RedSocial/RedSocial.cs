@@ -611,31 +611,52 @@ namespace RedSocial
         public List<Post> buscarPosts(string contenido, DateTime fechaDesde, DateTime fechaHasta, List<Tag> t)
         {
             List<Post> bPost = new List<Post>();
-            foreach (Post post in posts)
+
+            var query = from Post in contexto.posts
+                            where Post.contenido.Equals(contenido) &&
+                            Post.fecha >= fechaDesde &&
+                            Post.fecha <= fechaHasta
+                            select Post;
+
+            foreach (Post post in query)
             {
-                if (post.contenido.Equals(contenido))
+                foreach(Tag tag in t)
                 {
-                    bPost.Add(post);
-                }
-                else if (post.fecha >= fechaDesde && post.fecha <= fechaHasta)
-                {
-                    bPost.Add(post);
-                }
-                else
-                {
-                    foreach (Tag p in t)
+                    if (post.Tags.Contains(tag))
                     {
-                        foreach (Tag q in post.tags)
-                        {
-                            if (q.palabra == p.palabra)
-                            {
-                                bPost.Add(post);
-                            }
-                        }
+                        bPost.Add(post);
+                        break;
                     }
                 }
             }
-            return bPost;
+
+            return bPost.ToList();
+            //List<Post> bPost = new List<Post>();
+            //foreach (Post post in posts)
+            //{
+            //    if (post.contenido.Equals(contenido))
+            //    {
+            //        bPost.Add(post);
+            //    }
+            //    else if (post.fecha >= fechaDesde && post.fecha <= fechaHasta)
+            //    {
+            //        bPost.Add(post);
+            //    }
+            //    else
+            //    {
+            //        foreach (Tag p in t)
+            //        {
+            //            foreach (Tag q in post.tags)
+            //            {
+            //                if (q.palabra == p.palabra)
+            //                {
+            //                    bPost.Add(post);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //return bPost;
         }
         public Post buscarPost(int idPost)
         {
