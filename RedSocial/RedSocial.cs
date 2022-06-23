@@ -661,15 +661,19 @@ namespace RedSocial
         public Post buscarPost(int idPost)
         {
             Post post = null;
-            foreach(Post postActual in posts)
-            {
-                if(idPost == postActual.id)
-                {
-                    post = postActual;
-                    break;
-                }
-            }
+            post = contexto.posts.Where(U => U.id == idPost).FirstOrDefault();
             return post;
+
+            //Post post = null;
+            //foreach(Post postActual in posts)
+            //{
+            //    if(idPost == postActual.id)
+            //    {
+            //        post = postActual;
+            //        break;
+            //    }
+            //}
+            //return post;
         }
 
 
