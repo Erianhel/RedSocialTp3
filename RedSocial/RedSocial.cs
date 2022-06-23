@@ -46,7 +46,7 @@ namespace RedSocial
 
             Usuario us1 = contexto.usuarios.Where(U => U.nombre.Equals(nombre)).FirstOrDefault();
                 
-
+            if(us1 == null) return false;
                 if (us1.intentosFallidos == 3)
                 {
                     us1.bloqueado = true;
@@ -650,21 +650,29 @@ namespace RedSocial
             List<Post> bPost = new List<Post>();
 
             var query = from Post in contexto.posts
-                            where Post.contenido.Equals(contenido) &&
-                            Post.fecha >= fechaDesde &&
-                            Post.fecha <= fechaHasta
-                            select Post;
+                            where Post.contenido == contenido ||
+                            (Post.fecha >= fechaDesde &&
+                            Post.fecha <= fechaHasta)
+                        select Post;
+
+            if (t.Count() != 0) {
+                foreach (Post p in contexto.posts)
+                {
+                    foreach (Tag tag in t)
+                    {
+                        if (p.Tags.Where(u => u.palabra.Equals(tag.palabra)).FirstOrDefault() != null)
+                        {
+                            bPost.Add(p);
+                            break;
+                        }
+                    }                
+                }
+            }
 
             foreach (Post post in query)
             {
-                foreach(Tag tag in t)
-                {
-                    if (post.Tags.Contains(tag))
-                    {
-                        bPost.Add(post);
-                        break;
-                    }
-                }
+                bPost.Add((Post)post);
+
             }
 
             return bPost.ToList();
