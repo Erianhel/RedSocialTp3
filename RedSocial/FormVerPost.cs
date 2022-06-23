@@ -25,7 +25,7 @@ namespace RedSocial
             post = miRed.buscarPost(idPost);
             InitializeComponent();
             label_PostComentario.Text = post.contenido;
-            foreach(Tag tag in post.tags)
+            foreach(Tag tag in miRed.mostrarTagsDePost(post.id))
             {
                 dataGridView_Tags.Rows.Add(tag.palabra);
             }

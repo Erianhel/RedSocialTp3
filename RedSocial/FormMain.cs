@@ -42,7 +42,7 @@ namespace RedSocial
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            foreach(Usuario amigos in miRed.mostrarDatos().amigos)
+            foreach(Usuario amigos in miRed.mostrarAmigos())
             {
                 dataGridView_listaAmigos.Rows.Add(amigos.id,amigos.nombre,amigos.apellido,"Eliminar");
             }
