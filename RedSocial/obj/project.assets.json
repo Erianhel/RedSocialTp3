@@ -1864,19 +1864,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\leand\\.nuget\\packages\\": {}
+    "C:\\Users\\Lean\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\leand\\Source\\Repos\\RedSocialTp3\\RedSocial\\RedSocial.csproj",
+      "projectUniqueName": "C:\\Users\\Lean\\Source\\Repos\\RedSocialTp3\\RedSocial\\RedSocial.csproj",
       "projectName": "RedSocial",
-      "projectPath": "C:\\Users\\leand\\Source\\Repos\\RedSocialTp3\\RedSocial\\RedSocial.csproj",
-      "packagesPath": "C:\\Users\\leand\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\leand\\Source\\Repos\\RedSocialTp3\\RedSocial\\obj\\",
+      "projectPath": "C:\\Users\\Lean\\Source\\Repos\\RedSocialTp3\\RedSocial\\RedSocial.csproj",
+      "packagesPath": "C:\\Users\\Lean\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Lean\\Source\\Repos\\RedSocialTp3\\RedSocial\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\leand\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Lean\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1935,7 +1935,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
       }
     }
   }

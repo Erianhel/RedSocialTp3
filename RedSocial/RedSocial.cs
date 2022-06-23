@@ -23,7 +23,7 @@ namespace RedSocial
             {
                 contexto = new MyContext();
                 contexto.usuarios.Include(u => u.misPost).Include(u => u.misComentarios).Include(u => u.misReacciones).Include(u => u.misAmigos)
-                    .ThenInclude(ua => ua.user).Include(u => u.amigosMios).ThenInclude(ua => ua.amigo).Load();
+                    .Include(u => u.amigosMios).Load();
                 
                 contexto.posts.Include(u => u.usuario).Include(u => u.comentarios).Include(u => u.reacciones).Include(u => u.Tags).Load();
 
@@ -193,17 +193,19 @@ namespace RedSocial
         public bool agregarAmigo(int id)
         {
             Usuario usuario = null;
-            usuario = contexto.usuarios.Where(U => U.nombre.Equals(id)).FirstOrDefault();
-
-            if (usuario != null && usuarioActual.misAmigos.Where(U => U.amigo.Equals(usuario)).FirstOrDefault() != null)
+            usuario = contexto.usuarios.Where(U => U.id == id).FirstOrDefault();
+            UsuarioAmigo aux = usuarioActual.misAmigos.Where(U => U.amigo.Equals(usuario)).FirstOrDefault();
+            if (usuario != null &&  aux == null)
             {
                 try
                 {
                     UsuarioAmigo amigo = new UsuarioAmigo(usuarioActual,usuario);
-                    usuarioActual.amigosMios.Add(amigo);
+                    UsuarioAmigo amigo2 = new UsuarioAmigo(usuario, usuarioActual);
+                    usuarioActual.misAmigos.Add(amigo);
+                    usuarioActual.amigosMios.Add(amigo2);
                     contexto.Update(usuarioActual);
                     contexto.SaveChanges();
-
+                    return true;
                 }
                 catch (Exception e)
                 {
@@ -232,15 +234,18 @@ namespace RedSocial
         public void quitarAmigo(int id)
         {
             Usuario usuario = null;
-            usuario = contexto.usuarios.Where(U => U.nombre.Equals(id)).FirstOrDefault();
+            usuario = contexto.usuarios.Where(U => U.id == id).FirstOrDefault(); 
+
             
             if(usuario != null)
             {
                 UsuarioAmigo amigo = usuarioActual.misAmigos.Where(U => U.amigo.Equals(usuario)).FirstOrDefault();
+                UsuarioAmigo amigo2 = usuarioActual.amigosMios.Where(U => U.user.Equals(usuario)).FirstOrDefault();
 
                 if (amigo !=null)
                 {
                     usuarioActual.misAmigos.Remove(amigo);
+                    usuarioActual.amigosMios.Remove(amigo2);
                     contexto.SaveChanges();
                 }
             }
@@ -416,6 +421,14 @@ namespace RedSocial
             try
             {
                 Post nuevo = new Post(fecha,contenido,idUsuario);
+                foreach (Tag t in tag)
+                {
+                    if (contexto.Tags.Where(u => u.palabra.Equals(t.palabra)).FirstOrDefault() == null)
+                    {
+                        contexto.Tags.Add(t);
+                    }
+                    nuevo.Tags.Add(t);
+                }
                 contexto.posts.Add(nuevo);
                 usuarioActual.misPost.Add(nuevo);
                 contexto.SaveChanges();

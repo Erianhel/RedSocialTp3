@@ -61,7 +61,7 @@ namespace RedSocial.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Data Source=MSI\SQLEXPRESS;Initial Catalog=TP3RedSocial;Integrated Security=True.
+        ///   Busca una cadena traducida similar a Data Source=MSI\SQLEXPRESS;Initial Catalog=RedSocialTP3;Integrated Security=True.
         /// </summary>
         internal static string ConnectionString {
             get {

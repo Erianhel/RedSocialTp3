@@ -208,7 +208,7 @@ namespace RedSocial
                 new { id = 2, dni = "22222222", nombre = "222", apellido = "222", mail = "222@222", pass = "222", intentosFallidos = 0, bloqueado = false, esAdmin = false },
                 new { id = 3, dni = "33333333", nombre = "333", apellido = "333", mail = "333@333", pass = "333", intentosFallidos = 0, bloqueado = false, esAdmin = false },
                 new { id = 4, dni = "44444444", nombre = "444", apellido = "444", mail = "444@444", pass = "444", intentosFallidos = 0, bloqueado = false, esAdmin = false },
-                new { id = 5, dni = "55555555", nombre = "555", apellido = "555", mail = "555@555", pass = "555", intentosFallidos = 0, bloqueado = true, esAdmin = false });
+                new { id = 5, dni = "55555555", nombre = "555", apellido = "555", mail = "555@555", pass = "555", intentosFallidos = 3, bloqueado = true, esAdmin = false });
             modelBuilder.Entity<Post>().HasData(
                 new { id = 1, contenido = "111", fecha = DateTime.Now, idUsuario = 1 },
                 new { id = 2, contenido = "222", fecha = DateTime.Now, idUsuario = 1 },
@@ -243,7 +243,10 @@ namespace RedSocial
                new { num_usr = 1, num_usr2 = 2 },
                new { num_usr = 1, num_usr2 = 3 },
                new { num_usr = 2, num_usr2 = 4 },
+               new { num_usr = 4, num_usr2 = 2 },
                new { num_usr = 4, num_usr2 = 3 },
+               new { num_usr = 4, num_usr2 = 5 },
+               new { num_usr = 3, num_usr2 = 4 },
                new { num_usr = 5, num_usr2 = 4 });
 
           
