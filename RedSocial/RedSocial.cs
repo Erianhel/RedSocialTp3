@@ -681,19 +681,35 @@ namespace RedSocial
 
         public void comentar(int idPost, String contenido, DateTime fecha)
         {
-            int idNuevoComentario;
-            idNuevoComentario = DB.registrarComentario(fecha, contenido, usuarioActual.id, idPost);
-            if (idNuevoComentario != -1)
+            Post post = this.buscarPost(idPost);
+
+            if(post == null) return;
+            try
             {
-                //Ahora sí lo agrego en la lista
-                Comentario nuevo = new Comentario(idNuevoComentario, fecha, contenido, usuarioActual.id, idPost);
-                nuevo.usuario = usuarioActual;
+                Comentario comentario = new Comentario(fecha, contenido, usuarioActual.id, idPost);
+                contexto.comentarios.Add(comentario);
+                post.comentarios.Add(comentario);
+                contexto.posts.Update(post);
+                contexto.SaveChanges();
+            }catch(Exception ex)
+            {
+                return;
+            }
 
-                int aux = posts.FindIndex(p => p.id == idPost);
-                nuevo.post = posts[aux];
 
-                comentarios.Add(nuevo);
-                posts[aux].comentarios.Add(nuevo);
+            //int idNuevoComentario;
+            //idNuevoComentario = DB.registrarComentario(fecha, contenido, usuarioActual.id, idPost);
+            //if (idNuevoComentario != -1)
+            //{
+            //    //Ahora sí lo agrego en la lista
+            //    Comentario nuevo = new Comentario(idNuevoComentario, fecha, contenido, usuarioActual.id, idPost);
+            //    nuevo.usuario = usuarioActual;
+
+            //    int aux = posts.FindIndex(p => p.id == idPost);
+            //    nuevo.post = posts[aux];
+
+            //    comentarios.Add(nuevo);
+            //    posts[aux].comentarios.Add(nuevo);
 
             }
         }
