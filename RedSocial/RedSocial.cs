@@ -583,6 +583,20 @@ namespace RedSocial
             return contexto.Tags.ToList();
         }
 
+        //Mostrar amigos
+        public List<Usuario> mostrarAmigos()
+        {
+            List<Usuario> usuarios = new List<Usuario>();
+            List<UsuarioAmigo> amigos = usuarioActual.misAmigos.ToList();
+            
+            foreach (UsuarioAmigo amigo in amigos)
+            {
+                usuarios.Add(amigo.amigo);
+            }
+            
+            return usuarios;
+        }
+
         //Mostrar posts amigo
         public List<Post> mostrarPostAmigo()
         {
@@ -606,6 +620,16 @@ namespace RedSocial
             //}
             //return postAmigo;
         }
+
+        public List<Tag> mostrarTagsDePost(int idPost)
+        {
+            List<Tag> tags = new List<Tag>();
+            Post post = buscarPost(idPost);
+
+            tags = post.Tags.ToList();
+
+            return tags;
+        } 
 
         //Buscar posts
         public List<Post> buscarPosts(string contenido, DateTime fechaDesde, DateTime fechaHasta, List<Tag> t)
@@ -801,6 +825,7 @@ namespace RedSocial
                     post.Tags.Remove(tag);
                     contexto.posts.Update(post);
                 }
+                contexto.Tags.Remove(tag);
                 contexto.SaveChanges();
                 return true;
             }catch(Exception ex)
