@@ -711,83 +711,138 @@ namespace RedSocial
             //    comentarios.Add(nuevo);
             //    posts[aux].comentarios.Add(nuevo);
 
-            }
+            //}
         }
 
         //Modificar comentario
         public void modificarComentario(int idComentario, string nuevoComentario)
         {
+            Comentario comentario = null;
+            comentario = contexto.comentarios.Where(U => U.id == idComentario).FirstOrDefault();
 
-            if (DB.modificarComentario(idComentario, nuevoComentario))
+            if (comentario == null) return;
+
+            try
             {
-                int aux = comentarios.FindIndex(c => c.id == idComentario);
-
-                if (comentarios[aux].usuario.Equals(usuarioActual))
-                {
-                    comentarios[aux].contenido = nuevoComentario;
-                }
+                comentario.contenido = nuevoComentario;
+                contexto.comentarios.Update(comentario);
+                contexto.SaveChanges();
+            }catch(Exception ex)
+            {
+                return;
             }
+
+            //if (DB.modificarComentario(idComentario, nuevoComentario))
+            //{
+            //    int aux = comentarios.FindIndex(c => c.id == idComentario);
+
+            //    if (comentarios[aux].usuario.Equals(usuarioActual))
+            //    {
+            //        comentarios[aux].contenido = nuevoComentario;
+            //    }
+            //}
 
         }
 
         //Borrar comentario
         public void quitarComentario(int idPost, int idComentario)
         {
-            int auxCom = comentarios.FindIndex(c => c.id == idComentario);
-            if (!comentarios[auxCom].usuario.Equals(usuarioActual) && !usuarioActual.esAdmin) return;
+            Post post = buscarPost(idPost);
+            if (post == null) return;
 
-            if (DB.eliminarComentario(idComentario))
+            Comentario comentario = post.comentarios.Where(U =>U.id == idComentario).FirstOrDefault();
+            if(comentario == null) return;
+
+            try
             {
-                int aux2 = posts.FindIndex(post => post.id == idPost);
+                usuarioActual.misComentarios.Remove(comentario);
+                post.comentarios.Remove(comentario);
 
-                posts[aux2].comentarios.Remove(comentarios[auxCom]);
+                contexto.usuarios.Update(usuarioActual);
+                contexto.posts.Update(post);
+                contexto.comentarios.Remove(comentario);
+                contexto.SaveChanges();
 
-                int aux = usuarios.FindIndex(usuario => usuario.id == usuarioActual.id);
-                usuarios[aux].misComentarios.Remove(comentarios[auxCom]);
-
-                comentarios.Remove(comentarios[auxCom]);
+            }catch(Exception ex)
+            {
+                return;
             }
+
+            //int auxCom = comentarios.FindIndex(c => c.id == idComentario);
+            //if (!comentarios[auxCom].usuario.Equals(usuarioActual) && !usuarioActual.esAdmin) return;
+
+            //if (DB.eliminarComentario(idComentario))
+            //{
+            //    int aux2 = posts.FindIndex(post => post.id == idPost);
+
+            //    posts[aux2].comentarios.Remove(comentarios[auxCom]);
+
+            //    int aux = usuarios.FindIndex(usuario => usuario.id == usuarioActual.id);
+            //    usuarios[aux].misComentarios.Remove(comentarios[auxCom]);
+
+            //    comentarios.Remove(comentarios[auxCom]);
+            //}
 
         }
         //===========================================MANEJO DE TAGS==================================================
 
         public bool eliminarTag(int idTag)
         {
-            int idPost = -1;
-            bool borro = false;
-            Tag aux = null;
+            Tag tag = null;
+            tag = contexto.Tags.Where(U =>U.id == idTag).FirstOrDefault();
+
+            if(tag == null) return false;
+
+            try
+            {
+                List<Post> posts = contexto.posts.Where(U =>U.Tags.Contains(tag)).ToList();
+                foreach(Post post in posts)
+                {
+                    post.Tags.Remove(tag);
+                    contexto.posts.Update(post);
+                }
+                contexto.SaveChanges();
+                return true;
+            }catch(Exception ex)
+            {
+                return false;
+            }
+            return false;
+            //int idPost = -1;
+            //bool borro = false;
+            //Tag aux = null;
             
 
-            foreach (Tag tag in tags)
-            {
-                if (tag.id == idTag)
-                {
-                    aux = tag;
-                    idPost = tag.idPost;
-                    break;
-                }
-            }
+            //foreach (Tag tag in tags)
+            //{
+            //    if (tag.id == idTag)
+            //    {
+            //        aux = tag;
+            //        idPost = tag.idPost;
+            //        break;
+            //    }
+            //}
 
-            foreach (Post post in posts)
-            {
-                if (post.id == idPost)
-                {
-                    post.tags.Remove(aux);
+            //foreach (Post post in posts)
+            //{
+            //    if (post.id == idPost)
+            //    {
+            //        post.tags.Remove(aux);
                     
-                }
+            //    }
    
-            }
-            tags.Remove(aux);
+            //}
+            //tags.Remove(aux);
 
 
-             DB.bajaRelacionTag_post(idTag);
+            // DB.bajaRelacionTag_post(idTag);
 
-            borro = DB.bajaTag(idTag);
+            //borro = DB.bajaTag(idTag);
 
-            if (!borro) return borro;
+            //if (!borro) return borro;
 
 
-            return borro;
+            //return borro;
         }
 
         
