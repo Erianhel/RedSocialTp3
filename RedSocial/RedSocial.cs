@@ -891,6 +891,11 @@ namespace RedSocial
             //return borro;
         }
 
+        public void cerrarPrograma()
+        {
+            contexto.Dispose();
+        }
+
         
 
     }

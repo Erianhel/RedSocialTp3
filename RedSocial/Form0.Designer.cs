@@ -16,6 +16,7 @@
             if (disposing && (components != null))
             {
                 components.Dispose();
+                miRed.cerrarPrograma();
             }
             base.Dispose(disposing);
         }
