@@ -96,7 +96,7 @@ namespace RedSocial
             {
                 miRed.eliminarPost(post.id);
                 this.eventoAdmin();
-                this.Close();
+                this.Close() ;
             }
         }
     }
