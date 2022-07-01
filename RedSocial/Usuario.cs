@@ -28,8 +28,8 @@ namespace RedSocial
 
         public List<Reaccion> misReacciones = new List<Reaccion>();
 
-        public virtual ICollection<UsuarioAmigo> misAmigos { get; set; }
-        public virtual ICollection<UsuarioAmigo> amigosMios { get; set; }
+        public virtual ICollection<UsuarioAmigo> misAmigos { get; set; } = new List<UsuarioAmigo>();
+        public virtual ICollection<UsuarioAmigo> amigosMios { get; set; } = new List<UsuarioAmigo>();
 
 
         public Usuario()
